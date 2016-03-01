@@ -2,23 +2,30 @@ package com.lanxing.service.test;
 
 import com.lanxing.model.Student;
 import com.lanxing.service.StudentService;
-import org.junit.Before;
 import org.junit.Test;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.List;
 
 /**
  * Created by lanxing on 16-3-1.
  */
+
+@RunWith(SpringJUnit4ClassRunner.class)   //相当于继承了SpringJUnit4ClassRunner
+@ContextConfiguration(locations = {"classpath:spring.xml", "classpath:spring-mybatis.xml"})
 public class StudentServiceTest {
     private StudentService studentService;
 
-    @Before
-    public void initlize(){
-        ApplicationContext ac = new ClassPathXmlApplicationContext(new String[]{"spring.xml", "spring-mybatis.xml"});
-        studentService = (StudentService) ac.getBean("studentService");
+    public StudentService getStudentService() {
+        return studentService;
+    }
+
+    @Autowired
+    public void setStudentService(StudentService studentService) {
+        this.studentService = studentService;
     }
 
     @Test

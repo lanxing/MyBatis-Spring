@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lanxing.dao.StudentMapper">
+
+    <resultMap type="com.lanxing.model.Teacher" id="TeacherResult">
+        <id property="teacherId" column="teacher_id"/>
+        <result property="teacherName" column="teacher_name"/>
+        <result property="teacherPhone" column="teacher_phone"/>
+        <result property="teacherMail" column="teacher_mail"/>
+        <result property="teacherContent" column="teacher_content"/>
+        <result property="teacherProfessor" column="teacher_professor"/>
+    </resultMap>
+
+    <select id="findTeacherById" parameterType="String" resultMap="TeacherResult">
+        SELECT * FROM teachers WHERE teacher_id=#{teacherId}
+    </select>
+
+    <resultMap type="com.lanxing.model.Student" id="StudentResult">
+        <id property="stuId" column="stu_id"/>
+        <result property="stuName" column="stu_name"/>
+        <result property="stuPassword" column="stu_password"/>
+        <result property="stuPhone" column="stu_phone"/>
+        <result property="stuMail" column="stu_mail"/>
+        <result property="stuQQ" column="stu_qq"/>
+        <result property="stuWechart" column="stu_wechart"/>
+        <result property="stuGrade" column="stu_grade"/>
+        <result property="stuDegree" column="stu_degree"/>
+        <result property="stuAge" column="stu_age"/>
+        <result property="stuSex" column="stu_sex"/>
+        <result property="status" column="status"/>
+        <association property="teacher" column="teacher_id" select="findTeacherById"/>
+    </resultMap>
+
+    <select id="findAllStudents" resultMap="StudentResult">
+        SELECT * FROM students WHERE status = 1
+    </select>
+
+    <select id="findStudentById" parameterType="String"
+            resultMap="StudentResult">
+        SELECT * FROM students WHERE stu_id = #{studentId} AND status = 1
+    </select>
+
+    <select id="findStudentsByGrade" parameterType="int"
+            resultMap="StudentResult">
+        SELECT * FROM students WHERE stu_grade = #{studentGrade} AND status = 1
+    </select>
+
+    <select id="findStudentsByDegree" parameterType="int"
+            resultMap="StudentResult">
+        SELECT * FROM students WHERE stu_degree = #{studentDegree} AND status = 1
+    </select>
+
+    <insert id="insertStudent" parameterType="Student">
+        INSERT INTO students (stu_id, stu_password, stu_name, stu_phone, stu_mail, stu_qq, stu_wechart,
+        stu_grade, stu_degree, stu_age, stu_sex, teacher_id, status) VALUES
+        (#{stuId}, #{stuPassword}, #{stuName}, #{stuPhone}, #{stuMail}, #{stuQQ}, #{stuWechart}, #{stuGrade},
+        #{stuDegree}, #{stuAge}, #{stuSex}, #{teacher.teacherId}, #{status})
+    </insert>
+
+    <update id="updateStudent" parameterType="Student">
+        UPDATE students SET stu_degree = #{stuDegree}, stu_grade=#{stuGrade}, stu_age=#{stuAge},
+        stu_mail=#{stuMail}, stu_password=#{stuPassword}, stu_name=#{stuName}, stu_phone=#{stuPhone}, stu_qq=#{stuQQ},
+        stu_sex=#{stuSex}, stu_wechart=#{stuWechart}, teacher_id=#{teacher.teacherId}, status=#{status}
+        WHERE stu_id=#{stuId}
+    </update>
+
+    <update id="deleStudentById" parameterType="String">
+        DELETE FROM students WHERE stu_id=#{studentId} AND status=1
+    </update>
+</mapper>

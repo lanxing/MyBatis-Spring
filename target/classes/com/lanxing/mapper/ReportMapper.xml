@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lanxing.dao.ReportMapper">
+
+    <resultMap type="com.lanxing.model.Teacher" id="TeacherResult">
+        <id property="teacherId" column="teacher_id"/>
+        <result property="teacherName" column="teacher_name"/>
+        <result property="teacherPhone" column="teacher_phone"/>
+        <result property="teacherMail" column="teacher_mail"/>
+        <result property="teacherContent" column="teacher_content"/>
+        <result property="teacherProfessor" column="teacher_professor"/>
+    </resultMap>
+
+    <select id="findTeacherById" parameterType="String" resultMap="TeacherResult">
+        SELECT * FROM teachers WHERE teacher_id=#{teacherId}
+    </select>
+
+    <resultMap type="com.lanxing.model.Student" id="StudentResult">
+        <id property="stuId" column="stu_id"/>
+        <result property="stuName" column="stu_name"/>
+        <result property="stuPhone" column="stu_phone"/>
+        <result property="stuMail" column="stu_mail"/>
+        <result property="stuQQ" column="stu_qq"/>
+        <result property="stuWechart" column="stu_wechart"/>
+        <result property="stuGrade" column="stu_grade"/>
+        <result property="stuDegree" column="stu_degree"/>
+        <result property="stuAge" column="stu_age"/>
+        <result property="stuSex" column="stu_sex"/>
+        <result property="status" column="status"/>
+        <association property="teacher" column="teacher_id" select="findTeacherById"/>
+    </resultMap>
+
+    <select id="findStudentById" parameterType="String" resultMap="StudentResult">
+        SELECT * FROM students WHERE stu_id = #{stuId}
+    </select>
+
+    <resultMap type="com.lanxing.model.Report" id="ReportResult">
+        <id property="id" column="id"/>
+        <result property="proName" column="pro_name"/>
+        <result property="problem" column="problem"/>
+        <result property="nextPlan" column="next_plan"/>
+        <result property="reportContent" column="report_content"/>
+        <result property="reportTime" column="report_time"/>
+        <result property="modifyTime" column="modify_time"/>
+        <association property="student" column="stu_id" select="findStudentById"/>
+    </resultMap>
+
+    <select id="findReportById" parameterType="int" resultMap="ReportResult">
+        SELECT * FROM reports WHERE id=#{reportId}
+    </select>
+
+    <select id="findAllReports" resultMap="ReportResult">
+        SELECT * FROM reports
+    </select>
+
+    <insert id="insertReport" parameterType="Report">
+        INSERT INTO reports (stu_id, pro_name, problem, next_plan, report_content, report_time) VALUE
+        (#{student.stuId}, #{proName}, #{problem}, #{nextPlan}, #{reportContent}, #{reportTime})
+    </insert>
+
+    <update id="updateReport" parameterType="Report">
+        UPDATE reports SET pro_name=#{proName}, problem=#{problem}, next_plan=#{nextPlan},
+        report_content=#{reportContent}, report_time=#{reportTime} WHERE id=#{id}
+    </update>
+
+</mapper>
