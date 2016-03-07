@@ -11,6 +11,6 @@
     <title>Show Student</title>
 </head>
 <body>
-${student}
+${student.stuName}
 </body>
 </html>

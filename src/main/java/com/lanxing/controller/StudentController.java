@@ -4,6 +4,7 @@ import com.lanxing.model.Student;
 import com.lanxing.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
@@ -27,8 +28,8 @@ public class StudentController {
         this.studentService = studentService;
     }
 
-    @RequestMapping("/getStudentById")
-    public String getStudentById(String id, HttpServletRequest request){
+    @RequestMapping("/getStudentById/{id}")
+    public String getStudentById(@PathVariable String id, HttpServletRequest request){
 
         Student stu = studentService.findStudentById(id);
         request.setAttribute("student", stu);
